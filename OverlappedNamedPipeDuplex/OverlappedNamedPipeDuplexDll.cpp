@@ -25,6 +25,10 @@ OVNPD_EXTERNC OV_NAMED_PIPE_DLL int OVNPD_CALLCONV OverlappedNamedPipeDuplexInit
 	return 0;
 }
 
+OVNPD_EXTERNC OV_NAMED_PIPE_DLL void OVNPD_CALLCONV OverlappedNamedPipeDuplexDeInit() {
+	if ( gOvNamedPipeDuplex ) gOvNamedPipeDuplex.reset();
+}
+
 
 OVNPD_EXTERNC OV_NAMED_PIPE_DLL int OVNPD_CALLCONV OverlappedNamedPipeDuplexStartServer() {
 	if ( !gOvNamedPipeDuplex ) return -1;

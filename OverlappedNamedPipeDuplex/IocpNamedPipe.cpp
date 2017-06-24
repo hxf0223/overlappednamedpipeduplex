@@ -7,7 +7,7 @@
 #include "scoped_handle.hpp"
 #include "IocpNamedPipe.hpp"
 
-#define ENABLE_TRACE
+//#define ENABLE_TRACE
 #include "trace.h"
 
 // https://github.com/RadicalZephyr/named-pipe
@@ -40,12 +40,14 @@ enum class PipeCommand : byte
 	response = 0x10
 };
 
+#pragma pack(push)
+#pragma pack(1)
 struct PipeCommDataType
 {
 	PipeCommand cmd;
 	char name[256];
 };
-
+#pragma pack(pop)
 
 
 namespace boost
@@ -200,7 +202,7 @@ namespace boost
 			}
 
 			void COverlappedNamedPipeDuplexImp::pipe_thread_client(HANDLE& hEvent, std::string& strAppName, OVNamedPipeDuplexClientCb clientCb) {
-				_trace("pipe_thread_client started\n");
+				_trace("pipe_thread_client started, thread id: 0x%llx\n", boost::this_thread::get_id());
 				PipeCommDataType resp_data, request_data = { PipeCommand::request, 0 };
 				strcpy_s(request_data.name, sizeof request_data.name, strAppName.c_str());
 				auto hPipe = InvalidHandleValue::get();
@@ -251,7 +253,7 @@ namespace boost
 						fSuccess = ReadFile(hPipe, &resp_data, sizeof resp_data, &cbRead, nullptr);   // not overlapped 
 						if ( !fSuccess && GetLastError() != ERROR_MORE_DATA ) break;
 						_trace("pipe_thread_client ReadFile, num %d, data: %s\n", cbRead, resp_data.name);
-						if ( fSuccess && clientCb ) clientCb(resp_data.name);
+						if ( fSuccess && clientCb ) clientCb(&resp_data);
 					} while ( !fSuccess );
 					
 					if ( !fSuccess ) { _trace("read response from server fail\n"); }
@@ -265,7 +267,7 @@ namespace boost
 			#pragma region "Server thead: pipe_thread_server"
 
 			void COverlappedNamedPipeDuplexImp::pipe_thread_server(HANDLE& hEvent, std::vector<PipeInstance>* pInstArray, OVNamedPipeDuplexServerCb serverCb) {
-				_trace("pipe_thread_server started\n");
+				_trace("pipe_thread_server started, thread id: 0x%llx\n", boost::this_thread::get_id());
 				int pipe_ins_size = pInstArray->size();
 				std::shared_ptr<std::vector<HANDLE>> sp_hpipes(new std::vector<HANDLE>(pipe_ins_size), disconnect_pipes);
 				bforeach(auto& x, *sp_hpipes) x = InvalidHandleValue::get();
@@ -332,7 +334,7 @@ namespace boost
 							pinsarray[waitid].cbRead = cbRet;
 							pinsarray[waitid].dwState = PipeState::WRITING_STATE;
 							_trace("pipe_thread_server ReadFile<1> OK, num %ld: %s\n", cbRet, pinsarray[waitid].reqData.name);
-							if ( serverCb ) serverCb(pinsarray[waitid].reqData.name);
+							if ( serverCb ) serverCb(&pinsarray[waitid].reqData);
 							break;
 
 						case PipeState::WRITING_STATE:		// Pending write operation 
@@ -366,7 +368,7 @@ namespace boost
 							pinsarray[waitid].dwState = PipeState::WRITING_STATE;
 							_trace("pipe_thread_server ReadFile<2> OK, num %ld: %s\n",
 								pinsarray[waitid].cbRead, pinsarray[waitid].reqData.name);
-							if ( serverCb ) serverCb(pinsarray[waitid].reqData.name);
+							if ( serverCb ) serverCb(&pinsarray[waitid].reqData);
 							continue;
 						}
 

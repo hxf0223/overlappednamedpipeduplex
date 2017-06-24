@@ -3,10 +3,11 @@ EXPORTS
 
 OverlappedNamedPipeDuplexGetPipeName @1
 OverlappedNamedPipeDuplexInit @2
-OverlappedNamedPipeDuplexStartServer @3
-OverlappedNamedPipeDuplexStopServer @4
-OverlappedNamedPipeDuplexStartClient @5
-OverlappedNamedPipeDuplexStopClient @6
+OverlappedNamedPipeDuplexDeInit @3
+OverlappedNamedPipeDuplexStartServer @4
+OverlappedNamedPipeDuplexStopServer @5
+OverlappedNamedPipeDuplexStartClient @6
+OverlappedNamedPipeDuplexStopClient @7
 
-nOverlappedNamedPipeDuplexDll @7
-fnOverlappedNamedPipeDuplexDll @8
+nOverlappedNamedPipeDuplexDll @8
+fnOverlappedNamedPipeDuplexDll @9
