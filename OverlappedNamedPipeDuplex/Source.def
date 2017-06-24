@@ -1,0 +1,12 @@
+LIBRARY OverlappedNamedPipeDuplex
+EXPORTS
+
+OverlappedNamedPipeDuplexGetPipeName @1
+OverlappedNamedPipeDuplexInit @2
+OverlappedNamedPipeDuplexStartServer @3
+OverlappedNamedPipeDuplexStopServer @4
+OverlappedNamedPipeDuplexStartClient @5
+OverlappedNamedPipeDuplexStopClient @6
+
+nOverlappedNamedPipeDuplexDll @7
+fnOverlappedNamedPipeDuplexDll @8
