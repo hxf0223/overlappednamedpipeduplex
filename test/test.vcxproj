@@ -41,15 +41,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(BOOST1640_ROOT)\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST1640_ROOT)\bin\vc14_1\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(BOOST1670_ROOT)\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST1670_ROOT)\bin\vc14_1\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\</OutDir>
     <SourcePath>$(VC_SourcePath);$(BOOST1640_ROOT)\src</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(BOOST1640_ROOT)\src;$(IncludePath)</IncludePath>
-    <LibraryPath>$(BOOST1640_ROOT)\bin\vc14_1\x86;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(BOOST1670_ROOT)\src;$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST1670_ROOT)\bin\vc14_1\x86;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)bin\</OutDir>
     <SourcePath>$(VC_SourcePath);$(BOOST1640_ROOT)\src</SourcePath>
   </PropertyGroup>
