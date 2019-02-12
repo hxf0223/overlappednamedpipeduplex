@@ -3,7 +3,7 @@
 #include "OverlappedNamedPipeDuplexDll.h"
 
 using namespace boost::interprocess::overlapped;
-static std::unique_ptr<COverlappedNamedPipeDuplex> gOvNamedPipeDuplex;
+static std::unique_ptr<overlappedNamedPipeDuplex> gOvNamedPipeDuplex;
 
 OV_NAMED_PIPE_DLL int nOverlappedNamedPipeDuplexDll = 0;
 
@@ -12,13 +12,13 @@ OVNPD_EXTERNC int  OV_NAMED_PIPE_DLL OVNPD_CALLCONV fnOverlappedNamedPipeDuplexD
 }
 
 OVNPD_EXTERNC void OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexGetPipeName(char* pszBuffer, size_t size) {
-	auto name = COverlappedNamedPipeDuplex::get_pipe_name();
+	auto name = overlappedNamedPipeDuplex::get_pipe_name();
 	strcpy_s(pszBuffer, size, name.c_str());
 }
 
 OVNPD_EXTERNC int  OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexInit(char* pszAppName, OVNamedPipeDuplexServerCb serverCb, OVNamedPipeDuplexClientCb clientCb) {
 	if ( !gOvNamedPipeDuplex ) {
-		gOvNamedPipeDuplex = std::make_unique<COverlappedNamedPipeDuplex>(std::string(pszAppName), serverCb, clientCb);
+		gOvNamedPipeDuplex = std::make_unique<overlappedNamedPipeDuplex>(std::string(pszAppName), serverCb, clientCb);
 	}
 
 	return 0;

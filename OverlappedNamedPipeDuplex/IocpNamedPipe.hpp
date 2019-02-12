@@ -1,7 +1,6 @@
 #ifndef IOCP_NAMED_PIPE_HPP
 #define IOCP_NAMED_PIPE_HPP
 
-#include <windows.h>
 #include <memory>
 #include <string>
 #include "exports.h"
@@ -16,13 +15,12 @@ namespace boost
 	{
 		namespace overlapped
 		{
-			class COverlappedNamedPipeDuplexImp;
+			class overlappedNamedPipeDuplexImp;
 
-			class OV_NAMED_PIPE_DLL COverlappedNamedPipeDuplex
-			{
+			class OV_NAMED_PIPE_DLL overlappedNamedPipeDuplex {
 			public:
-				explicit COverlappedNamedPipeDuplex(std::string appName, OVNamedPipeDuplexServerCb cbServer, OVNamedPipeDuplexClientCb cbClient);
-				virtual ~COverlappedNamedPipeDuplex();
+				explicit overlappedNamedPipeDuplex(std::string appName, OVNamedPipeDuplexServerCb cbServer, OVNamedPipeDuplexClientCb cbClient);
+				virtual ~overlappedNamedPipeDuplex();
 
 			public:
 				static std::string get_pipe_name();
@@ -32,7 +30,7 @@ namespace boost
 				void stopClient() const;
 
 			private:
-				std::unique_ptr<COverlappedNamedPipeDuplexImp> m_pipe_comm_imp;
+				std::unique_ptr<overlappedNamedPipeDuplexImp> m_pipe_comm_imp;
 			};
 
 		}

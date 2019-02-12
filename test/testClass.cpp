@@ -74,7 +74,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		) % "example :\n" % 15 % 15 % 15 % 15 % 15 % 15.01 % 15.01 % 15.01);
 
 	//auto p = new testClass[10]{testClass(1), testClass(2), testClass(3), testClass(4), testClass(5), testClass(6), testClass(7), testClass(8), testClass(9), testClass(10)};
-	boost::interprocess::overlapped::COverlappedNamedPipeDuplex pipecomm("named_pipe_comm_test", nullptr, nullptr);
+	boost::interprocess::overlapped::overlappedNamedPipeDuplex pipecomm("named_pipe_comm_test", nullptr, nullptr);
 	pipecomm.startServer();
 	//pipecomm.startClient();
 
