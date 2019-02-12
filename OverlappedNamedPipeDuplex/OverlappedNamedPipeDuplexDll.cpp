@@ -16,7 +16,7 @@ OVNPD_EXTERNC void OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexGet
 	strcpy_s(pszBuffer, size, name.c_str());
 }
 
-OVNPD_EXTERNC int  OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexInit(char* pszAppName, OVNamedPipeDuplexServerCb serverCb, OVNamedPipeDuplexClientCb clientCb) {
+OVNPD_EXTERNC int  OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexInit(char* pszAppName, ov_named_pipe_duplex_server_cb serverCb, ov_named_pipe_duplex_client_cb clientCb) {
 	if ( !gOvNamedPipeDuplex ) {
 		gOvNamedPipeDuplex = std::make_unique<overlappedNamedPipeDuplex>(std::string(pszAppName), serverCb, clientCb);
 	}

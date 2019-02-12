@@ -17,10 +17,15 @@ namespace boost
 		{
 			class overlappedNamedPipeDuplexImp;
 
-			class OV_NAMED_PIPE_DLL overlappedNamedPipeDuplex {
+			class OV_NAMED_PIPE_DLL overlappedNamedPipeDuplex final {
 			public:
-				explicit overlappedNamedPipeDuplex(std::string appName, OVNamedPipeDuplexServerCb cbServer, OVNamedPipeDuplexClientCb cbClient);
-				virtual ~overlappedNamedPipeDuplex();
+				explicit overlappedNamedPipeDuplex(std::string appName, ov_named_pipe_duplex_server_cb cbServer, ov_named_pipe_duplex_client_cb cbClient);
+				~overlappedNamedPipeDuplex();
+
+				overlappedNamedPipeDuplex(const overlappedNamedPipeDuplex&) = delete;
+				overlappedNamedPipeDuplex& operator=(const overlappedNamedPipeDuplex&) = delete;
+				overlappedNamedPipeDuplex(const overlappedNamedPipeDuplex&&) = delete;
+				overlappedNamedPipeDuplex& operator=(const overlappedNamedPipeDuplex&&) = delete;
 
 			public:
 				static std::string get_pipe_name();

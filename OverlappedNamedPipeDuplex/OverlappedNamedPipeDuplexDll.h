@@ -11,14 +11,14 @@
 
 #define OVNPD_CALLCONV		__stdcall
 
-typedef void (OVNPD_CALLCONV *OVNamedPipeDuplexServerCb)(void* pReceive);
-typedef void (OVNPD_CALLCONV *OVNamedPipeDuplexClientCb)(void* pReceive);
+typedef void (OVNPD_CALLCONV *ov_named_pipe_duplex_server_cb)(void* pReceive);
+typedef void (OVNPD_CALLCONV *ov_named_pipe_duplex_client_cb)(void* pReceive);
 
 OVNPD_EXTERNC OV_NAMED_PIPE_DLL int nOverlappedNamedPipeDuplexDll;
 OVNPD_EXTERNC int   OV_NAMED_PIPE_DLL  OVNPD_CALLCONV fnOverlappedNamedPipeDuplexDll(void);
 
 OVNPD_EXTERNC void OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexGetPipeName(char* pszBuffer, size_t size);
-OVNPD_EXTERNC int   OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexInit(char* pszAppName, OVNamedPipeDuplexServerCb serverCb, OVNamedPipeDuplexClientCb clientCb);
+OVNPD_EXTERNC int   OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexInit(char* pszAppName, ov_named_pipe_duplex_server_cb serverCb, ov_named_pipe_duplex_client_cb clientCb);
 OVNPD_EXTERNC void OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexDeInit();
 
 OVNPD_EXTERNC int   OV_NAMED_PIPE_DLL OVNPD_CALLCONV OverlappedNamedPipeDuplexStartServer();

@@ -57,10 +57,16 @@ namespace boost
 	{
 		namespace overlapped
 		{
-			class overlappedNamedPipeDuplexImp {
+			class overlappedNamedPipeDuplexImp final {
 			public:
-				explicit overlappedNamedPipeDuplexImp(string appName, OVNamedPipeDuplexServerCb cbServer, OVNamedPipeDuplexClientCb cbClient);
-				virtual ~overlappedNamedPipeDuplexImp();
+				explicit overlappedNamedPipeDuplexImp(string appName, ov_named_pipe_duplex_server_cb cbServer,
+					ov_named_pipe_duplex_client_cb cbClient);
+				~overlappedNamedPipeDuplexImp();
+
+				overlappedNamedPipeDuplexImp(const overlappedNamedPipeDuplexImp&) = delete;
+				overlappedNamedPipeDuplexImp& operator=(const overlappedNamedPipeDuplexImp&) = delete;
+				overlappedNamedPipeDuplexImp(const overlappedNamedPipeDuplexImp&&) = delete;
+				overlappedNamedPipeDuplexImp& operator=(const overlappedNamedPipeDuplexImp&&) = delete;
 
 			public:
 				static std::string get_pipe_name();
@@ -73,8 +79,8 @@ namespace boost
 				enum class pipeState : byte;
 				struct PipeInstance;
 
-				static void pipe_thread_client(HANDLE& hEvent, string& strAppName, OVNamedPipeDuplexClientCb clientCb);
-				static void pipe_thread_server(HANDLE& hEvent, vector<PipeInstance>* pInstArray, OVNamedPipeDuplexServerCb serverCb);
+				static void pipe_thread_client(HANDLE& hEvent, string& strAppName, ov_named_pipe_duplex_client_cb clientCb);
+				static void pipe_thread_server(HANDLE& hEvent, vector<PipeInstance>* pInstArray, ov_named_pipe_duplex_server_cb serverCb);
 				static boost::tuple<BOOL, pipeState> disconn_and_reconn_pipe(HANDLE hPipeInst, LPOVERLAPPED lpo);
 				static BOOL conn_to_new_client(HANDLE hPipe, LPOVERLAPPED lpo);
 				static void disconnect_pipe(HANDLE handle);
@@ -97,8 +103,8 @@ namespace boost
 
 				//std::unique_ptr<std::vector<HANDLE>, std::function<void(std::vector<HANDLE>*)>> m_hEvents;
 
-				OVNamedPipeDuplexServerCb m_servercb;
-				OVNamedPipeDuplexClientCb m_clientcb;
+				ov_named_pipe_duplex_server_cb m_servercb;
+				ov_named_pipe_duplex_client_cb m_clientcb;
 			};
 
 			enum class overlappedNamedPipeDuplexImp::pipeState : byte {
@@ -133,8 +139,8 @@ namespace boost
 			 * \param cbServer
 			 * \param cbClient
 			 */
-			overlappedNamedPipeDuplexImp::overlappedNamedPipeDuplexImp(string appName, OVNamedPipeDuplexServerCb cbServer, OVNamedPipeDuplexClientCb cbClient) :
-				m_appname(std::move(appName)),
+			overlappedNamedPipeDuplexImp::overlappedNamedPipeDuplexImp(string appName, ov_named_pipe_duplex_server_cb cbServer, ov_named_pipe_duplex_client_cb cbClient)
+				: m_appname(std::move(appName)),
 				m_pis(new std::vector<PipeInstance>(sm_pipe_ins_num)),
 				m_hClientExitEvent(CreateEvent(nullptr, TRUE, FALSE, "ClientExitEvent"), close_event),
 				m_hServerExitEvent(CreateEvent(nullptr, TRUE, FALSE, "ServerExitEvent"), close_event),
@@ -196,7 +202,7 @@ namespace boost
 				}
 			}
 
-			void overlappedNamedPipeDuplexImp::pipe_thread_client(HANDLE& hEvent, std::string& strAppName, OVNamedPipeDuplexClientCb clientCb) {
+			void overlappedNamedPipeDuplexImp::pipe_thread_client(HANDLE& hEvent, std::string& strAppName, ov_named_pipe_duplex_client_cb clientCb) {
 				_trace("pipe_thread_client started, thread id: 0x%llx\n", boost::this_thread::get_id());
 				PipeCommDataType resp_data{}, request_data = { PipeCommand::request, 0 };
 				strcpy_s(request_data.name, sizeof request_data.name, strAppName.c_str());
@@ -261,7 +267,7 @@ namespace boost
 
 #pragma region "Server thead: pipe_thread_server"
 
-			void overlappedNamedPipeDuplexImp::pipe_thread_server(HANDLE& hEvent, std::vector<PipeInstance>* pInstArray, OVNamedPipeDuplexServerCb serverCb) {
+			void overlappedNamedPipeDuplexImp::pipe_thread_server(HANDLE& hEvent, std::vector<PipeInstance>* pInstArray, ov_named_pipe_duplex_server_cb serverCb) {
 				_trace("pipe_thread_server started, thread id: 0x%llx\n", boost::this_thread::get_id());
 				const int pipe_ins_size = pInstArray->size();
 				std::shared_ptr<std::vector<HANDLE>> sp_hpipes(new std::vector<HANDLE>(pipe_ins_size), disconnect_pipes);
@@ -480,7 +486,7 @@ namespace boost
 				return fPendingIO;
 			}
 
-			overlappedNamedPipeDuplex::overlappedNamedPipeDuplex(std::string appName, OVNamedPipeDuplexServerCb cbServer, OVNamedPipeDuplexClientCb cbClient) :
+			overlappedNamedPipeDuplex::overlappedNamedPipeDuplex(std::string appName, ov_named_pipe_duplex_server_cb cbServer, ov_named_pipe_duplex_client_cb cbClient) :
 				m_pipe_comm_imp(new overlappedNamedPipeDuplexImp(appName, cbServer, cbClient)) {
 			}
 

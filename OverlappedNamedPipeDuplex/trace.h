@@ -3,7 +3,7 @@
 #ifdef ENABLE_TRACE
 #include <crtdbg.h>
 
-inline void _cdecl _trace(char* lpszFormat, ...) {
+inline void _cdecl _trace(const char* lpszFormat, ...) {
 	va_list args;
 	va_start(args, lpszFormat);
 
@@ -13,5 +13,5 @@ inline void _cdecl _trace(char* lpszFormat, ...) {
 	va_end(args);
 }
 #else
-inline void _cdecl _trace(char* lpszFormat, ...) {}
+inline void _cdecl _trace(const char* lpszFormat, ...) {}
 #endif
