@@ -15,7 +15,7 @@ namespace WindowsFormsApplication1
 {
 	public partial class Form1 : Form
 	{
-		private overlappedNamedPipeDuplexAppMutex _ov_named_pipe_duplex_app_mutex;
+		private OverlappedNamedPipeDuplexAppMutex _ov_named_pipe_duplex_app_mutex;
 
 		public Form1() {
 			InitializeComponent();
@@ -23,18 +23,18 @@ namespace WindowsFormsApplication1
 
 		private void Form1_Load( object sender, EventArgs e ) {
 			string appname = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
-			_ov_named_pipe_duplex_app_mutex = new overlappedNamedPipeDuplexAppMutex(appname, on_app_mutex_server_handler, null);
+			_ov_named_pipe_duplex_app_mutex = new OverlappedNamedPipeDuplexAppMutex(appname, on_app_mutex_server_handler, null);
 			_ov_named_pipe_duplex_app_mutex.startServer();
 			Debug.WriteLine("form load done...");
 		}
 
 		private void on_app_mutex_server_handler(object sender, EventArgs e) {
-			var args = e as overlappedNamedPipeDuplexAppMutex.serverResponseCbEventArgs;
+			var args = e as OverlappedNamedPipeDuplexAppMutex.serverResponseCbEventArgs;
 			Debug.WriteLine("on_app_mutex_server_handler: " + args );
 		}
 
 		private void on_app_mutex_client_handler(object sender, EventArgs e) {
-			var args = e as overlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs;
+			var args = e as OverlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs;
 			this.Invoke(delegate {
 				Debug.WriteLine("on_app_mutex_client_handler: " + args);
 			});

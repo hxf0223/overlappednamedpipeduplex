@@ -25,5 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Source.def" />
+    <None Include="cpp.hint" />
   </ItemGroup>
 </Project>

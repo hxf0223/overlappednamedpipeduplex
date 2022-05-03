@@ -10,26 +10,26 @@ using System.Text;
 
 namespace overlapped_namepipe.duplex
 {
-  public class overlappedNamedPipeDuplexAppMutex : IDisposable
+  public class OverlappedNamedPipeDuplexAppMutex : IDisposable
   {
-    private readonly overlappedNamedPipeDuplexAppMutex.ovNamedPipeDuplexServerCb _resp_cb_server;
-    private readonly overlappedNamedPipeDuplexAppMutex.oVNamedPipeDuplexClientCb _resp_cb_client;
+    private readonly ovNamedPipeDuplexServerCb _resp_cb_server;
+    private readonly oVNamedPipeDuplexClientCb _resp_cb_client;
     private bool _disposed;
 
-    public event EventHandler onServerResponseEvent;
+    public event EventHandler OnServerResponseEvent;
 
-    public event EventHandler onClientResponseEvent;
+    public event EventHandler OnClientResponseEvent;
 
-    public overlappedNamedPipeDuplexAppMutex(string appName, EventHandler serverResponseHandler, EventHandler clientResponseHandler)
+    public OverlappedNamedPipeDuplexAppMutex(string appName, EventHandler serverResponseHandler, EventHandler clientResponseHandler)
     {
-      this._resp_cb_server = new overlappedNamedPipeDuplexAppMutex.ovNamedPipeDuplexServerCb(this.native_server_resp_cb_func);
-      this._resp_cb_client = new overlappedNamedPipeDuplexAppMutex.oVNamedPipeDuplexClientCb(this.native_client_resp_cb_func);
-      this.onServerResponseEvent += serverResponseHandler;
-      this.onClientResponseEvent += clientResponseHandler;
-      overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexInit(appName, this._resp_cb_server, this._resp_cb_client);
+      this._resp_cb_server = new OverlappedNamedPipeDuplexAppMutex.ovNamedPipeDuplexServerCb(this.native_server_resp_cb_func);
+      this._resp_cb_client = new OverlappedNamedPipeDuplexAppMutex.oVNamedPipeDuplexClientCb(this.native_client_resp_cb_func);
+      this.OnServerResponseEvent += serverResponseHandler;
+      this.OnClientResponseEvent += clientResponseHandler;
+      OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexInit(appName, this._resp_cb_server, this._resp_cb_client);
     }
 
-    ~overlappedNamedPipeDuplexAppMutex()
+    ~OverlappedNamedPipeDuplexAppMutex()
     {
       this.Dispose(false);
     }
@@ -38,7 +38,7 @@ namespace overlapped_namepipe.duplex
     private static extern void OverlappedNamedPipeDuplexGetPipeName(StringBuilder sbBuffer, uint size);
 
     [DllImport("OverlappedNamedPipeDuplex.dll", CallingConvention = CallingConvention.StdCall)]
-    private static extern int OverlappedNamedPipeDuplexInit([MarshalAs(UnmanagedType.LPStr)] string strAppName, [MarshalAs(UnmanagedType.FunctionPtr)] overlappedNamedPipeDuplexAppMutex.ovNamedPipeDuplexServerCb cbServer, [MarshalAs(UnmanagedType.FunctionPtr)] overlappedNamedPipeDuplexAppMutex.oVNamedPipeDuplexClientCb cbClient);
+    private static extern int OverlappedNamedPipeDuplexInit([MarshalAs(UnmanagedType.LPStr)] string strAppName, [MarshalAs(UnmanagedType.FunctionPtr)] OverlappedNamedPipeDuplexAppMutex.ovNamedPipeDuplexServerCb cbServer, [MarshalAs(UnmanagedType.FunctionPtr)] OverlappedNamedPipeDuplexAppMutex.oVNamedPipeDuplexClientCb cbClient);
 
     [DllImport("OverlappedNamedPipeDuplex.dll", CallingConvention = CallingConvention.StdCall)]
     private static extern int OverlappedNamedPipeDuplexDeInit();
@@ -55,42 +55,42 @@ namespace overlapped_namepipe.duplex
     [DllImport("OverlappedNamedPipeDuplex.dll", CallingConvention = CallingConvention.StdCall)]
     private static extern int OverlappedNamedPipeDuplexStopClient();
 
-    protected void server_response_notify(overlappedNamedPipeDuplexAppMutex.serverResponseCbEventArgs args)
+    protected void server_response_notify(OverlappedNamedPipeDuplexAppMutex.serverResponseCbEventArgs args)
     {
-      if (this.onServerResponseEvent == null)
+      if (this.OnServerResponseEvent == null)
         return;
-      foreach (EventHandler invocation in this.onServerResponseEvent.GetInvocationList())
+      foreach (EventHandler invocation in this.OnServerResponseEvent.GetInvocationList())
         invocation.BeginInvoke((object) this, (EventArgs) args, (AsyncCallback) null, (object) null);
     }
 
-    protected void client_response_notify(overlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs args)
+    protected void client_response_notify(OverlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs args)
     {
-      if (this.onClientResponseEvent == null)
+      if (this.OnClientResponseEvent == null)
         return;
-      foreach (EventHandler invocation in this.onClientResponseEvent.GetInvocationList())
+      foreach (EventHandler invocation in this.OnClientResponseEvent.GetInvocationList())
         invocation.BeginInvoke((object) this, (EventArgs) args, (AsyncCallback) null, (object) null);
     }
 
     protected void remove_all_server_response_event_handler()
     {
-      if (this.onServerResponseEvent == null)
+      if (this.OnServerResponseEvent == null)
         return;
-      Delegate[] invocationList = this.onServerResponseEvent.GetInvocationList();
+      Delegate[] invocationList = this.OnServerResponseEvent.GetInvocationList();
       if (invocationList.Length <= 0)
         return;
       foreach (Delegate @delegate in invocationList)
-        this.onServerResponseEvent -= @delegate as EventHandler;
+        this.OnServerResponseEvent -= @delegate as EventHandler;
     }
 
     protected void remove_all_client_response_event_handler()
     {
-      if (this.onClientResponseEvent == null)
+      if (this.OnClientResponseEvent == null)
         return;
-      Delegate[] invocationList = this.onClientResponseEvent.GetInvocationList();
+      Delegate[] invocationList = this.OnClientResponseEvent.GetInvocationList();
       if (invocationList.Length <= 0)
         return;
       foreach (Delegate @delegate in invocationList)
-        this.onClientResponseEvent -= @delegate as EventHandler;
+        this.OnClientResponseEvent -= @delegate as EventHandler;
     }
 
     public void Dispose()
@@ -104,9 +104,9 @@ namespace overlapped_namepipe.duplex
       if (this._disposed)
         return;
       int num = disposing ? 1 : 0;
-      overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopServer();
-      overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopClient();
-      overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexDeInit();
+      OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopServer();
+      OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopClient();
+      OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexDeInit();
       this.remove_all_server_response_event_handler();
       this.remove_all_client_response_event_handler();
       this._disposed = true;
@@ -114,32 +114,32 @@ namespace overlapped_namepipe.duplex
 
     private void native_server_resp_cb_func(IntPtr pReceive)
     {
-      this.server_response_notify(new overlappedNamedPipeDuplexAppMutex.serverResponseCbEventArgs((overlappedNamedPipeDuplexAppMutex.pipeCommDataType) Marshal.PtrToStructure(pReceive, typeof (overlappedNamedPipeDuplexAppMutex.pipeCommDataType))));
+      this.server_response_notify(new OverlappedNamedPipeDuplexAppMutex.serverResponseCbEventArgs((OverlappedNamedPipeDuplexAppMutex.pipeCommDataType) Marshal.PtrToStructure(pReceive, typeof (OverlappedNamedPipeDuplexAppMutex.pipeCommDataType))));
     }
 
     private void native_client_resp_cb_func(IntPtr pReceive)
     {
-      this.client_response_notify(new overlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs((overlappedNamedPipeDuplexAppMutex.pipeCommDataType) Marshal.PtrToStructure(pReceive, typeof (overlappedNamedPipeDuplexAppMutex.pipeCommDataType))));
+      this.client_response_notify(new OverlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs((OverlappedNamedPipeDuplexAppMutex.pipeCommDataType) Marshal.PtrToStructure(pReceive, typeof (OverlappedNamedPipeDuplexAppMutex.pipeCommDataType))));
     }
 
     public int startServer()
     {
-      return overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStartServer();
+      return OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStartServer();
     }
 
     public int stopServer()
     {
-      return overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopServer();
+      return OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopServer();
     }
 
     public int startClient()
     {
-      return overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStartClient();
+      return OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStartClient();
     }
 
     public int stopClient()
     {
-      return overlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopClient();
+      return OverlappedNamedPipeDuplexAppMutex.OverlappedNamedPipeDuplexStopClient();
     }
 
     public enum pipeCommand : byte
@@ -151,7 +151,7 @@ namespace overlapped_namepipe.duplex
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public struct pipeCommDataType
     {
-      public overlappedNamedPipeDuplexAppMutex.pipeCommand _cmd;
+      public OverlappedNamedPipeDuplexAppMutex.pipeCommand _cmd;
       [MarshalAs(UnmanagedType.ByValArray, SizeConst = 256)]
       public byte[] _name;
     }
@@ -164,9 +164,9 @@ namespace overlapped_namepipe.duplex
 
     public class serverResponseCbEventArgs : EventArgs
     {
-      public overlappedNamedPipeDuplexAppMutex.pipeCommDataType data { get; private set; }
+      public OverlappedNamedPipeDuplexAppMutex.pipeCommDataType data { get; private set; }
 
-      public serverResponseCbEventArgs(overlappedNamedPipeDuplexAppMutex.pipeCommDataType data)
+      public serverResponseCbEventArgs(OverlappedNamedPipeDuplexAppMutex.pipeCommDataType data)
       {
         this.data = data;
       }
@@ -179,9 +179,9 @@ namespace overlapped_namepipe.duplex
 
     public class clientResponseCbEventArgs : EventArgs
     {
-      public overlappedNamedPipeDuplexAppMutex.pipeCommDataType data { get; private set; }
+      public OverlappedNamedPipeDuplexAppMutex.pipeCommDataType data { get; private set; }
 
-      public clientResponseCbEventArgs(overlappedNamedPipeDuplexAppMutex.pipeCommDataType data)
+      public clientResponseCbEventArgs(OverlappedNamedPipeDuplexAppMutex.pipeCommDataType data)
       {
         this.data = data;
       }

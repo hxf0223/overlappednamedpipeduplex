@@ -18,7 +18,7 @@ namespace WindowsFormsApplication1
 			string appname = System.Reflection.Assembly.GetExecutingAssembly().GetName().Name;
 
 			var ov_named_pipe_duplex_app_mutex =
-				new overlappedNamedPipeDuplexAppMutex(appname, null, on_app_mutex_client_handler);
+				new OverlappedNamedPipeDuplexAppMutex(appname, null, on_app_mutex_client_handler);
 			ov_named_pipe_duplex_app_mutex.startClient();
 			bool bresult = _mre.WaitOne(200);
 
@@ -40,7 +40,7 @@ namespace WindowsFormsApplication1
 		}
 
 		private static void on_app_mutex_client_handler(object sender, EventArgs e) {
-			var args = e as overlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs;
+			var args = e as OverlappedNamedPipeDuplexAppMutex.clientResponseCbEventArgs;
 			_mre.Set();
 		}
 

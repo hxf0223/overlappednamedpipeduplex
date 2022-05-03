@@ -1,8 +1,8 @@
 #include <boost/foreach.hpp>
-#include<boost/thread.hpp>
+#include <boost/thread.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/format.hpp>
-#include<boost/algorithm/string.hpp>
+#include <boost/algorithm/string.hpp>
 #include <utility>
 
 #include "scoped_handle.hpp"
@@ -37,7 +37,7 @@ inline std::string windowify_pipe_path(const std::string& str) {
 	return newstr;
 }
 
-enum class PipeCommand : byte {
+enum class PipeCommand : uint8_t {
 	request = 0x01,
 	response = 0x10
 };
@@ -76,7 +76,7 @@ namespace boost
 				void stopClient();
 
 			private:
-				enum class pipeState : byte;
+				enum class pipeState : uint8_t;
 				struct PipeInstance;
 
 				static void pipe_thread_client(HANDLE& hEvent, string& strAppName, ov_named_pipe_duplex_client_cb clientCb);
@@ -107,7 +107,7 @@ namespace boost
 				ov_named_pipe_duplex_client_cb m_clientcb;
 			};
 
-			enum class overlappedNamedPipeDuplexImp::pipeState : byte {
+			enum class overlappedNamedPipeDuplexImp::pipeState : uint8_t {
 				connecting_state = 0,		// init state, should be 0
 				reading_state = 1,
 				writing_state = 2
